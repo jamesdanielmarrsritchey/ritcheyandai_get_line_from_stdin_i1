@@ -1,0 +1,75 @@
+jamesdanielmarrsritchey: Using C++, write a program that reads from stdin, until it reaches a specific line number, and then returns that line. Arguments are passed from the commandline by the user. Arguments all have prefixes identifying them. If the line number is than the number of lines in the input, the program should return bool false, and exit 1.
+
+GitHub Copilot: Here's a simple C++ program that does what you asked for. It uses the `std::getline` function to read lines from `std::cin` until it reaches the desired line number. It also uses the `std::stoi` function to convert the command line argument to an integer.
+
+```cpp
+#include <iostream>
+#include <string>
+
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <line number>\n";
+        return 1;
+    }
+
+    int target_line = std::stoi(argv[1]);
+    if (target_line <= 0) {
+        std::cerr << "Line number must be a positive integer.\n";
+        return 1;
+    }
+
+    std::string line;
+    for (int i = 1; i <= target_line; ++i) {
+        if (!std::getline(std::cin, line)) {
+            std::cerr << "Input has fewer than " << target_line << " lines.\n";
+            return 1;
+        }
+    }
+
+    std::cout << line << '\n';
+    return 0;
+}
+```
+
+You can compile this program with a command like `g++ -o read_line read_line.cpp`, and then run it with `./read_line <line number>`. You can provide input either by typing it at the console and pressing Ctrl-D to signal end of input, or by redirecting input from a file with `./read_line <line number> < input.txt`.
+
+jamesdanielmarrsritchey: The argument shoulld be "--line_number value"
+
+GitHub Copilot: To handle command line arguments in the format `--line_number value`, you can modify the program to parse the arguments accordingly. Here's how you can do it:
+
+```cpp
+#include <iostream>
+#include <string>
+
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " --line_number <line number>\n";
+        return 1;
+    }
+
+    std::string arg = argv[1];
+    if (arg != "--line_number") {
+        std::cerr << "Unknown argument: " << arg << "\n";
+        return 1;
+    }
+
+    int target_line = std::stoi(argv[2]);
+    if (target_line <= 0) {
+        std::cerr << "Line number must be a positive integer.\n";
+        return 1;
+    }
+
+    std::string line;
+    for (int i = 1; i <= target_line; ++i) {
+        if (!std::getline(std::cin, line)) {
+            std::cerr << "Input has fewer than " << target_line << " lines.\n";
+            return 1;
+        }
+    }
+
+    std::cout << line << '\n';
+    return 0;
+}
+```
+
+You can compile this program with a command like `g++ -o read_line read_line.cpp`, and then run it with `./read_line --line_number <line number>`. You can provide input either by typing it at the console and pressing Ctrl-D to signal end of input, or by redirecting input from a file with `./read_line --line_number <line number> < input.txt`.
